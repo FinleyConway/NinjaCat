@@ -69,13 +69,15 @@ def game_loop(windowSurface: pygame.Surface):
     # game loop
     while (isRunning):
         deltaTime = clock.tick(targetFPS) / 1000
-        aliveCounter += deltaTime
         
-        timer += deltaTime
-        if (timer >= dogTimer):
-            randomAttack = random.randint(0, 1)
-            gameObjects.add(GameObjects.Dog("Dog.png", player, randomAttack))
-            timer = 0
+        if (player.hasMoved):
+            aliveCounter += deltaTime
+            
+            timer += deltaTime
+            if (timer >= dogTimer):
+                randomAttack = random.randint(0, 1)
+                gameObjects.add(GameObjects.Dog("Assets/Dog.png", player, randomAttack))
+                timer = 0
         
         # query poll events 
         for  event in pygame.event.get():

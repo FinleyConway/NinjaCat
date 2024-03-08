@@ -29,6 +29,8 @@ class NinjaCat(Sprite):
         self.newStarTimer = 1
         self.timer = 0
         
+        self.hasMoved = False
+        
     def update(self, deltaTime):
         keys = pygame.key.get_pressed()
         
@@ -38,15 +40,18 @@ class NinjaCat(Sprite):
         if (keys[pygame.K_a]):
             self.velocity[0] -= self.speed * deltaTime
             self.flip(horizontal=True)
+            self.hasMoved = True
                 
         if (keys[pygame.K_d]):
             self.velocity[0] += self.speed * deltaTime
             self.flip(horizontal=False)
+            self.hasMoved = True
         
         # jump
         if (keys[pygame.K_SPACE] and not self.jumping):
             self.velocity[1] = self.jumpVel
             self.jumping = True
+            self.hasMoved = True
         
         # gravity
         self.velocity[1] += self.gravity * deltaTime
@@ -96,6 +101,7 @@ class NinjaCat(Sprite):
             self.target.add(ninja_star)
             
             self.canThrow = False
+            self.hasMoved = True
     
     def die(self):
         sys.exit()
@@ -118,6 +124,8 @@ class Dog(Sprite):
         self.set_random_position()
 
     def update(self, deltaTime):
+        if (not self.player.hasMoved): return
+        
         if (self.followType == 0):
             self.follow_player(deltaTime)
         else:
@@ -203,6 +211,7 @@ class Platform(Sprite):
                     if (keys[pygame.K_s]):
                         self.player.jumping = True
                         self.player.rect[1] += self.player.gravity * deltaTime
+                        self.player.hasMoved = True
                     # sit on top of platform
                     else:
                         self.player.rect.bottom = self.rect.top
